@@ -276,7 +276,6 @@
         <h3> Start a business </h3>
 		{% if userShop is none %}
         <form class="form-group " method="POST" action="{{url_for('registerShop')}}">
-          <input type="hidden" id="shopRegistered" name="shopRegistered" value="0">
           <div class="row">
             <div class="col-xs-2">
               <label for="shopName">shop name</label>
@@ -331,7 +330,6 @@
 		</form>
 		{% else %}
 		<form class="form-group ">
-          <input type="hidden" id="shopRegistered" name="shopRegistered" value="1">
 		  <div class="row">
             <div class="col-xs-2">
               <label for="ex5">shop name</label>
@@ -363,7 +361,7 @@
         <h3>ADD</h3>
 
         <form class="form-group " enctype=multipart/form-data method="POST" action="{{url_for('registerItem')}}">
-		{% if userData is none %}
+		{% if userShop is none %}
           <div class="row">
 
             <div class="col-xs-6">
@@ -518,51 +516,6 @@
                   <td><button type="button" class="btn btn-danger">Delete</button></td>
                 </tr>
                 {% endfor %}
-                <tr>
-                  <th scope="row">2</th>
-                  <td><img src="Picture/2.jpg" width="10" height="10" alt="coffee"></td>
-                  <td>coffee</td>
-               
-                  <td>50 </td>
-                  <td>20</td>
-                  <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#coffee-1">
-                    Edit
-                    </button></td>
-                    <!-- Modal -->
-                        <div class="modal fade" id="coffee-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">coffee Edit</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <div class="row" >
-                                  <div class="col-xs-6">
-                                    <label for="ex72">price</label>
-                                    <input class="form-control" id="ex72" type="text">
-                                  </div>
-                                  <div class="col-xs-6">
-                                    <label for="ex42">quantity</label>
-                                    <input class="form-control" id="ex42" type="text">
-                                  </div>
-                                </div>
-                      
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
-                               
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-
-                  <td><button type="button" class="btn btn-danger">Delete</button></td>
-                </tr>
-
               </tbody>
             </table>
           </div>

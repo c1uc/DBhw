@@ -40,10 +40,12 @@ def hello():
 def main():
     uid = session.get('uid')
     userShop = None
+    userShopItems = list()
     if uid is not None:
         cursor.execute("select shopname, shoptype, latitude, longitude, sid from shop where uid = %s", (uid, ))
-        tmp = cursor.fetchone()
-        if tmp is not None:
+        res = cursor.fetchall()
+        if len(res) > 0:
+            tmp = res[0]
             userShop = {
                 'shopName': tmp[0],
                 'shopType': tmp[1],
@@ -80,7 +82,7 @@ def validateShopInfo():
     cursor.execute("select * from shop where shopname = %s", (shopName, ))
     res = cursor.fetchall()
     result = dict()
-    result['nameResult'] = 'This Name is used!' if res is not None else \
+    result['nameResult'] = 'This Name is used!' if len(res) > 0 else \
         'Shop Name should be at least one character!' if shopName == '' else ''
     result['typeResult'] = 'Shop Name should longer than 0' if shopType == '' else ''
     result['longitudeResult'] = 'Longitude format Error' if check_num(longitude, 'longitude') is False else ''
@@ -94,8 +96,8 @@ def validateShopInfo():
 def registerShop():
     uid = session.get('uid')
     cursor.execute("select shopname from shop where uid = %s", (uid,))
-    r = cursor.fetchone()
-    if r is None:
+    r = cursor.fetchall()
+    if len(r) == 0:
         shopName = request.form.get('shopName')
         shopType = request.form.get('shopType')
         longitude = request.form.get('shopLongitude')
@@ -142,7 +144,7 @@ def validateItemInfo():
 def registerItem():
     uid = session.get('uid')
     cursor.execute("select sid from shop where uid = %s", (uid,))
-    sid = cursor.fetchone()[0]
+    sid = cursor.fetchall()[0]
     itemName = request.form.get('itemName')
     itemPrice = request.form.get('itemPrice')
     itemQuantity = request.form.get('itemQuantity')
