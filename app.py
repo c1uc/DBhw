@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, session, request, jsonify, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 import mysql.connector
+import time
 
 UPLOAD_FOLDER = 'static\\Picture'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -153,8 +154,7 @@ def registerItem():
         flash('Incapable file', category='danger')
         return redirect(url_for('main'))
     picName = secure_filename(pic.filename)
-    picCount = len(os.listdir(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])))
-    fileName = str(picCount) + '.' + picName.rsplit('.', 1)[1].lower()
+    fileName = str(time.time_ns()) + '.' + picName.rsplit('.', 1)[1].lower()
     pic.save(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], fileName))
     cursor.execute("""insert into item (sid, name, quantity, price, image) VALUES (%s, %s, %s, %s, %s)""",
                    (sid, itemName, itemQuantity, itemPrice, fileName))
@@ -184,6 +184,18 @@ def updateItem():
         flash('Update Error! Input is Empty.', category='danger')
     else:
         flash('Update Error! Input format Error.', category='danger')
+    return redirect(url_for('main'))
+
+
+@app.route('/deleteItem', methods=['POST'])
+def deleteItem():
+    itemId = request.form.get('itemId')
+    cursor.execute("SELECT image FROM item where iid = %s", (itemId, ))
+    fileName = cursor.fetchall()[0][0]
+    cursor.execute("DELETE FROM item where iid = %s", (itemId, ))
+    os.remove(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], fileName))
+    db.commit()
+    flash('Delete Success.', category='success')
     return redirect(url_for('main'))
 
 
