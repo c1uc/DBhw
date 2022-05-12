@@ -144,7 +144,7 @@ def validateItemInfo():
 def registerItem():
     uid = session.get('uid')
     cursor.execute("select sid from shop where uid = %s", (uid,))
-    sid = cursor.fetchall()[0]
+    sid = cursor.fetchall()[0][0]
     itemName = request.form.get('itemName')
     itemPrice = request.form.get('itemPrice')
     itemQuantity = request.form.get('itemQuantity')
@@ -156,10 +156,34 @@ def registerItem():
     picCount = len(os.listdir(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])))
     fileName = str(picCount) + '.' + picName.rsplit('.', 1)[1].lower()
     pic.save(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], fileName))
-    cursor.execute("""insert into item (sid, name, quantity, price, image)
-            VALUES (%s, %s, %s, %s, %s)""", (sid, itemName, itemQuantity, itemPrice, fileName))
+    cursor.execute("""insert into item (sid, name, quantity, price, image) VALUES (%s, %s, %s, %s, %s)""",
+                   (sid, itemName, itemQuantity, itemPrice, fileName))
     db.commit()
     flash("Add success!", category='success')
+    return redirect(url_for('main'))
+
+
+@app.route('/updateItem', methods=['POST'])
+def updateItem():
+    def check_num(x):
+        try:
+            a = int(x)
+            if a <= 0:
+                return False
+            return True
+        except ValueError:
+            return False
+    itemId = request.form.get('itemId')
+    itemQuantity = request.form.get('Quantity')
+    itemPrice = request.form.get('Price')
+    if check_num(itemQuantity) and check_num(itemPrice):
+        cursor.execute("UPDATE item SET quantity = %s, price = %s WHERE iid = %s", (itemQuantity, itemPrice, itemId, ))
+        db.commit()
+        flash('Update Success!', category='success')
+    elif itemQuantity == '' or itemPrice == '':
+        flash('Update Error! Input is Empty.', category='danger')
+    else:
+        flash('Update Error! Input format Error.', category='danger')
     return redirect(url_for('main'))
 
 

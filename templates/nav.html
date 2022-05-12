@@ -480,37 +480,46 @@
                 
                   <td> {{ item.1 }} </td>
                   <td> {{ item.2 }} </td>
-                  <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#{{ item.4 }}-1">
+                  <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#{{ item.4 }}">
                   Edit
                   </button></td>
                   <!-- Modal -->
-                      <div class="modal fade" id="{{ item.4 }}-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal fade" id="{{ item.4 }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
-                          <form>
-                            <div class="modal-content" action="summit">
+                            <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="staticBackdropLabel"> {{item.0}} Edit </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
-                              <div class="modal-body">
-                                <div class="row" >
-                                  <div class="col-xs-6">
-                                    <label for="ex71">price</label>
-                                    <input class="form-control" id="ex71" type="text">
-                                  </div>
-                                  <div class="col-xs-6">
-                                    <label for="ex41">quantity</label>
-                                    <input class="form-control" id="ex41" type="text">
-                                  </div>
+                                <div class="modal-body">
+                                  <form role="form" method="POST" action="{{ url_for('updateItem') }}">
+                                    <input type="hidden" name="itemId" value="{{item.4}}">
+                                    <div class="form-group">
+                                    <label class="control-label">Price</label>
+                                      <div>
+                                      <input type="text" class="form-control input-lg" name="Price" value="">
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <label class="control-label">Quantity</label>
+                                      <div>
+                                        <input type="text" class="form-control input-lg" name="Quantity">
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <div>
+                                        <button type="submit" class="btn btn-success">Edit</button>
+                                      </div>
+                                    </div>
+                                  </form>
                                 </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
-                              </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal" name="Close">Close</button>
+                                </div>
+                              </form>
                             </div>
-                          </form>
                         </div>
                       </div>
                   <td><button type="button" class="btn btn-danger">Delete</button></td>
@@ -542,6 +551,30 @@
   <script type=text/javascript>
 	$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
+  <script type="text/javascript">
+			function validateEditInfo() {
+				var form = new FormData();
+				form.append('name', $("#shopName").val());
+				form.append('type', $("#shopType").val());
+				form.append('longitude', $("#shopLongitude").val());
+				form.append('latitude', $("#shopLatitude").val());
+				$.ajax({
+					type: "POST",
+					url: $SCRIPT_ROOT + "/validateShopInfo",
+					data: form,
+					success: (data) => {
+						document.getElementsByName("shopNameWarn")[0].textContent = data.nameResult;
+						document.getElementsByName("shopTypeWarn")[0].textContent = data.typeResult;
+						document.getElementsByName("shopLongitudeWarn")[0].textContent = data.longitudeResult;
+						document.getElementsByName("shopLatitudeWarn")[0].textContent = data.latitudeResult;
+						document.getElementsByName("shopRegisterButton")[0].disabled = data.error;
+					},
+					contentType: false,
+					processData: false,
+					dataType: "json"
+				});
+			}
+		  </script>
   <!-- Option 2: Separate Popper and Bootstrap JS -->
   <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
