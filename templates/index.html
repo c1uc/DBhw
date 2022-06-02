@@ -12,7 +12,6 @@
 	<meta name="description" content="Free HTML5 Template by FreeHTML5.co" />
 	<meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive" />
 	<meta name="author" content="FreeHTML5.co" />
-
   <!-- 
 	//////////////////////////////////////////////////////
 
@@ -57,7 +56,8 @@
 
 	</head>
 	<body>
-
+        <div class="container">
+  	
 		
 		<div class="container">
 
@@ -66,23 +66,34 @@
 					
 
 					<!-- Start Sign In Form -->
-					<form action="#" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+					<form method="POST" action="{{url_for('login')}}" class="fh5co-form animate-box" data-animate-effect="fadeIn">
 						<h2>Sign In</h2>
+						{% block content %}
+                            <div class="form-group">
+                                {% for message in get_flashed_messages(with_categories=True) %}
+                                <div class="alert alert-{{ message[0] }}" >
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    {{ message[1] }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% endblock content %}
 						<div class="form-group">
 							<label for="Account" class="sr-only">Account</label>
-							<input type="text" class="form-control" id="Account" placeholder="Account" autocomplete="off">
+							<input type="text" class="form-control" id="Account" name="Account" placeholder="Account" autocomplete="off">
 						</div>
 						<div class="form-group">
 							<label for="password" class="sr-only">Password</label>
-							<input type="password" class="form-control" id="password" placeholder="Password" autocomplete="off">
+							<input type="password" class="form-control" id="password" name="password" placeholder="Password" autocomplete="off">
 						</div>
 				
 						<div class="form-group">
-							<p>Not registered? <a href="sign-up.html">Sign Up</a> </p>
+							<p>Not registered? <a href="register">Sign Up</a> </p>
 						</div>
 						<div class="form-group">
 							<input type="submit" value="Sign In" class="btn btn-primary">
 						</div>
+
 					</form>
 					<!-- END Sign In Form -->
 
@@ -109,4 +120,3 @@
 
 	</body>
 </html>
-
