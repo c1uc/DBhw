@@ -657,6 +657,10 @@ def registerItem():
     if allowed_file(pic.filename) is False:
         flash('Incapable file', category='danger')
         return redirect(url_for('main'))
+    cursor.execute("SELECT name FROM item WHERE name = %s", (itemName, ))
+    if len(cursor.fetchall()) > 0:
+        flash('Duplicated item name!', category='danger')
+        return redirect(url_for('main'))
     picName = secure_filename(pic.filename)
     fileName = str(time.time_ns()) + '.' + picName.rsplit('.', 1)[-1].lower()
     pic.save(os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'], fileName))
